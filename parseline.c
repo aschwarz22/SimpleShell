@@ -9,7 +9,7 @@
 
 #include "parseline.h"
 
-int parseline(char *line, struct stage *stg, int *concurrent)
+int parseline(char *line, struct stage *stg, int *concurrent, int concurrent_argnums[CMD_MAX])
 {
    int filedes[2];
    int c;

@@ -17,10 +17,12 @@ int main(int argc, char *argv[])
 {
    int stagec;
    int concurrent;
+   int concurrent_argnum;
    char cmd[CMD_MAX];
    char cmd_prev[CMD_MAX];
    struct stage stage[STAGE_MAX];
    FILE *f;
+   int concurrent_argnums[CMD_MAX];
    struct sigaction sa;
    int normal;
    int history = 0;
@@ -28,7 +30,7 @@ int main(int argc, char *argv[])
    sa.sa_handler = handler;
    sa.sa_flags = 0;
    sigemptyset(&sa.sa_mask);
-   concurrent = 1;
+   concurrent = 0;
    
    /* catch sigint */
    if (sigaction(SIGINT, &sa, NULL) < 0)
@@ -90,7 +92,7 @@ int main(int argc, char *argv[])
       history = 1;
 
       /* checks if parseline returns error */ 
-      if ((stagec = parseline(cmd, stage, &concurrent)) < 1){
+      if ((stagec = parseline(cmd, stage, &concurrent, concurrent_argnums)) < 1){
          continue;
       }
       /* shouldn't reach here */

@@ -29,6 +29,6 @@ typedef struct input {
 void initInput(char *str, input *in);
 int LineErrCheck(input *in);
 
-int parseline(char *line, struct stage *stg, int *concurrent);
+int parseline(char *line, struct stage *stg, int *concurrent, int concurrent_argnums[CMD_MAX]);
 
 #endif
