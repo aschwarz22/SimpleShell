@@ -9,7 +9,7 @@
 
 #include "parseline.h"
 
-int parseline(char *line, struct stage *stg, int *concurrent, int concurrent_argnums[CMD_MAX])
+int parseline(char *line, struct stage *stg, int concurrent_argnums[CMD_MAX])
 {
    int filedes[2];
    int c;
@@ -47,7 +47,7 @@ int parseline(char *line, struct stage *stg, int *concurrent, int concurrent_arg
       {
          if (!strcmp(arg, "&"))
          {
-            *concurrent = 1;
+            concurrent_argnums[0] = 0;
          }
   
          if (!strcmp(arg, "<") && (!(arg = strtok_r(NULL, " ", &argdup)) || 

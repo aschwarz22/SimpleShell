@@ -16,7 +16,6 @@
 int main(int argc, char *argv[])
 {
    int stagec;
-   int concurrent;
    int concurrent_argnum;
    char cmd[CMD_MAX];
    char cmd_prev[CMD_MAX];
@@ -30,7 +29,6 @@ int main(int argc, char *argv[])
    sa.sa_handler = handler;
    sa.sa_flags = 0;
    sigemptyset(&sa.sa_mask);
-   concurrent = 0;
    
    /* catch sigint */
    if (sigaction(SIGINT, &sa, NULL) < 0)
@@ -92,7 +90,7 @@ int main(int argc, char *argv[])
       history = 1;
 
       /* checks if parseline returns error */ 
-      if ((stagec = parseline(cmd, stage, &concurrent, concurrent_argnums)) < 1){
+      if ((stagec = parseline(cmd, stage, concurrent_argnums)) < 1){
          continue;
       }
       /* shouldn't reach here */
