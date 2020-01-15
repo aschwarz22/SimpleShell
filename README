@@ -1,0 +1,23 @@
+Project: Minimally Useful Shell (MUSH)
+Professor: George Taylor, CPE 357
+Developers: Alon Schwarz and Roee Landesman
+Submission Date: March 15th, 2019
+
+Instructions:
+	1) $ make
+	2) $./mush
+	3) Type in commands as you please 
+
+Known bugs: 
+	1) 'Too many arguments' and 'filename', technically don't works; It throws an error just not the correct one 
+	2) Control-C does not work. The interrupt simply claims a command is unknown
+	3) Control-D does not work. Instead, the command 'quit' will exit the MUSH program. 
+		a) Generally speaking, interrupts are the largest known bugs in our MUSH program. 
+
+Learning Points:
+	1) We learned how to properly use & implement fork, exec, and pipelines. 
+	2) We learned the difficulty in locking down the (millions) of edge cases in a program. 
+	3) It was discovered that working in parallel on GitHub can lead to many unfortunate errors. 
+		In retrospect we would have learned how to efficently use git before attacking a project of this size. 
+	4) This project was coded on a 3 hour drive from SLO -> San Francisco, and on a 13 hour plane ride from SFO -> Munich. Difficult moments and good memories were made in the process. 
+
