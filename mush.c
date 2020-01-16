@@ -18,22 +18,11 @@ int main(int argc, char *argv[])
    char cmd_prev[CMD_MAX];
    struct stage stage[STAGE_MAX];
    FILE *f;
-   struct sigaction sa;
+
    int normal;
    int history = 0;
+   /* concurrency check */
    int concurrent_argnums[CMD_MAX] = {-1};
-   /* Set signal masks */
-   sa.sa_handler = handler;
-   sa.sa_flags = 0;
-   sigemptyset(&sa.sa_mask);
-
-   
-   /* catch sigint */
-   if (sigaction(SIGINT, &sa, NULL) < 0)
-   {
-      perror("sigaction");
-      exit(1);
-   }
 
    /* should only be ./mush */
    if (argc > 2)
@@ -144,15 +133,6 @@ int main(int argc, char *argv[])
 
 
 
-void handler(int signum){
-   int i;
-   for (i = 0; i < 1; i++){
-      if (signum == SIGINT){
-         break;
-      }
-   }
-}
-
 int close_fd(struct stage* stage, int filenum){
    int i;
    for (i = 0; i < filenum; i++)
@@ -174,7 +154,7 @@ void executeCommand(struct stage *stage, int c, int concurrent_argnums[CMD_MAX])
    
       /* creates child process for command */
       cpid[i] = fork();
-      if (cpid[i] == 0) /* Child process */
+      if (cpid[i] == 0) 
       {
          char *argv[STAGE_MAX];
 
@@ -210,6 +190,7 @@ void executeCommand(struct stage *stage, int c, int concurrent_argnums[CMD_MAX])
       i++;
    }
 
+   /* checks for concurrent commands, doesn't wait if command is concurrent */
    for (i = 0; i < c; i++){
       if (concurrent_argnums[c] != 1){
          while (waitpid(cpid[i], &st, 0) < 0);
