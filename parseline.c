@@ -47,23 +47,28 @@ int parseline(char *line, struct stage *stg, int concurrent_argnums[CMD_MAX])
       {
          if (!strcmp(arg, "&"))
          {
-            concurrent_argnums[0] = 0;
+            concurrent_argnums[c] = 1;
+            arg = strtok_r(NULL, " ", &argdup);
+            if (arg == NULL){
+               break;
+            }
          }
   
-         if (!strcmp(arg, "<") && (!(arg = strtok_r(NULL, " ", &argdup)) || 
-                index(stg[c].cmd, '<') != rindex(stg[c].cmd, '<') ||
-                !strcmp(arg, ">")))
-         {
-            fprintf(stderr, "%s: bad output redirection\n", stg[c].cmd);
-            return -1;
+         // if (!strcmp(arg, "<") && (!(arg = strtok_r(NULL, " ", &argdup)) || 
+         //        index(stg[c].cmd, '<') != rindex(stg[c].cmd, '<') ||
+         //        !strcmp(arg, ">")))
+         // {
+         //    fprintf(stderr, "%s: bad output redirection\n", stg[c].cmd);
+         //    return -1;
 
-         if ((stg[c].infd = open(arg, O_RDONLY)) < 0)
-            {
-               perror(arg);
-               return -1;
-            }
+         //arg = strtok_r(NULL, " ", &argdup);
+         // if ((stg[c].infd = open(arg, O_RDONLY)) < 0)
+         //    {
+         //       perror(arg);
+         //       return -1;
+         //    }
 
-         }
+         //}
          else if (strcmp(arg, ">") == 0)
          {
             if (!(arg = strtok_r(NULL, " ", &argdup)) ||

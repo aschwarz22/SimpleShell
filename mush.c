@@ -7,28 +7,26 @@
 #include <string.h>
 #include <signal.h>
 #include <errno.h>
-
 #include "parseline.h"
 #include "mush.h"
-
 
 
 int main(int argc, char *argv[])
 {
    int stagec;
-   int concurrent_argnum;
    char cmd[CMD_MAX];
    char cmd_prev[CMD_MAX];
    struct stage stage[STAGE_MAX];
    FILE *f;
-   int concurrent_argnums[CMD_MAX];
    struct sigaction sa;
    int normal;
    int history = 0;
+   int concurrent_argnums[CMD_MAX] = {-1};
    /* Set signal masks */
    sa.sa_handler = handler;
    sa.sa_flags = 0;
    sigemptyset(&sa.sa_mask);
+
    
    /* catch sigint */
    if (sigaction(SIGINT, &sa, NULL) < 0)
@@ -130,7 +128,7 @@ int main(int argc, char *argv[])
             break;
          }
          else if (normal == MORE){
-            executeCommand(stage, stagec);
+            executeCommand(stage, stagec, concurrent_argnums);
             break;
          }
          else{
@@ -143,6 +141,7 @@ int main(int argc, char *argv[])
 
    return 0;
 }
+
 
 
 void handler(int signum){
@@ -164,7 +163,7 @@ int close_fd(struct stage* stage, int filenum){
    return i;
 }
 
-void executeCommand(struct stage *stage, int c){
+void executeCommand(struct stage *stage, int c, int concurrent_argnums[CMD_MAX]){
    pid_t cpid[STAGE_MAX];
    int i;
    int j;
@@ -212,7 +211,9 @@ void executeCommand(struct stage *stage, int c){
    }
 
    for (i = 0; i < c; i++){
-      while (waitpid(cpid[i], &st, 0) < 0);
+      if (concurrent_argnums[c] != 1){
+         while (waitpid(cpid[i], &st, 0) < 0);
+      }
    }
    /* clear stdout */
    fflush(stdout);
